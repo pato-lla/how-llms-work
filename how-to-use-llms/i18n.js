@@ -360,8 +360,8 @@
     { selector: '#s-summary .ps-desc:nth-of-type(7)', text: { en: 'Most features, largest ecosystem, most polished UX. Claude for coding. Perplexity for search-first. The landscape shifts quickly — check LM Arena for current rankings before committing.', es: 'Más funciones, ecosistema más grande y UX más pulida. Claude para código. Perplexity para búsqueda primero. El panorama cambia rápido: mira LM Arena para ver las clasificaciones actuales antes de comprometerte.' } },
     { selector: '#s-summary .fade-up:last-of-type .body-text', text: { en: 'Built from Andrej Karpathy\'s "How I use LLMs" lecture. All content, examples, and framings traced directly to that source. Interactive visualizations built with AI assistance.', es: 'Construido a partir de la charla "How I use LLMs" de Andrej Karpathy. Todo el contenido, ejemplos y enfoques están trazados directamente a esa fuente. Las visualizaciones interactivas se hicieron con ayuda de IA.' } },
     { selector: '#s-summary .fade-up:last-of-type a[href="../index.html"]', text: { en: '← Part 1: How LLMs Work', es: '← Parte 1: Cómo funcionan los LLMs' } },
-    { selector: '#s-summary .fade-up:last-of-type a[href="transcript.html"]', text: { en: 'Full transcript', es: 'Transcripción completa' } },
-    { selector: '#s-summary .fade-up:last-of-type a[href="https://github.com/ynarwal/how-llms-work"]', text: { en: 'GitHub', es: 'GitHub' } },
+    { selector: '#s-summary .fade-up:last-of-type a[href="transcript/"]', text: { en: 'Full transcript', es: 'Transcripción completa' } },
+    { selector: '#s-summary .fade-up:last-of-type a[href="https://github.com/pato-lla/how-llms-work"]', text: { en: 'GitHub', es: 'GitHub' } },
   ];
 
   const browserLocale = (navigator.language || 'en').toLowerCase();

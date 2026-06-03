@@ -28,7 +28,7 @@ Based on Andrej Karpathy's [Intro to Large Language Models](https://www.youtube.
 |------|-------------|
 | `index.html` | Main site (v2 redesign) |
 | `v1.html` | Original dark-theme version |
-| `transcript.html` | Full Karpathy lecture transcript page |
+| `transcript/` | Full Karpathy lecture transcript page |
 | `transcript.txt` | Source transcript text used to generate the page |
 | `council.py` | LLM council fact-checker (runs via `uv run council.py`) |
 | `report.html` | Latest council fact-check report |
