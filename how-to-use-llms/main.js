@@ -59,7 +59,7 @@
       "It has no memory of you, its knowledge is 6–12 months stale, and every answer is a probabilistic sample. Treat it like a brilliant intern — not an oracle.",
       "For timeless knowledge, skip web search — the weights are enough. For anything recent, time-sensitive, or esoteric — enable search or use Perplexity.",
       "Voice removes half the friction. Super Whisper can route ~50% of your queries hands-free. Switch to typing for product names and library names Whisper gets wrong.",
-      "Thinking models (o1, o3) are for hard problems. They're slower and pricier — don't waste them on simple tasks. Claude Sonnet often beats o1 Pro on nuanced code."
+      "Thinking models (o3, o3-pro) are for hard problems. They're slower and pricier — don't waste them on simple tasks. Claude Opus 4.8 often beats o3-pro on nuanced code."
     ] }
   };
   let mi = 0, ci = 0, deleting = false, runId = 0, messages = getCopy().typewriter.messages;

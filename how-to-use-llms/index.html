@@ -147,13 +147,13 @@
       <div class="app-card">
         <div class="ac-name">Claude</div>
         <div class="ac-by">Anthropic</div>
-        <div class="ac-desc">Exceptional at coding and document analysis. Powers Cursor (3.7 Sonnet) under the hood. Often outperforms on nuanced reasoning tasks.</div>
+        <div class="ac-desc">Exceptional at coding and document analysis. Powers Cursor (Claude Opus 4.8) under the hood. Often outperforms on nuanced reasoning tasks.</div>
         <div class="ac-tags"><span class="tag tag-g">Coding</span><span class="tag tag-c">Docs</span></div>
       </div>
       <div class="app-card">
         <div class="ac-name">Gemini</div>
         <div class="ac-by">Google</div>
-        <div class="ac-desc">Google's entrant. Gemini 2.0 Pro experimental available. Deep integration with Google Workspace. Strong multimodal capabilities.</div>
+        <div class="ac-desc">Google's entrant. Gemini 3 Pro preview available. Deep integration with Google Workspace. Strong multimodal capabilities.</div>
         <div class="ac-tags"><span class="tag tag-p">Multimodal</span></div>
       </div>
       <div class="app-card">
@@ -182,31 +182,56 @@
         <div class="model-family-card">
           <div class="mf-provider">OpenAI</div>
           <div class="mf-models">
-            <div class="model-chip chip-default">GPT-4o <span>fast · smart · default</span></div>
-            <div class="model-chip chip-thinking">o1 / o3 / o3-mini <span>thinking models</span></div>
-            <div class="model-chip chip-premium">o1 Pro <span>$200/mo · deep reasoning</span></div>
+            <div class="model-chip chip-default">GPT-5.5 <span>flagship · coding · general-purpose</span></div>
+            <div class="model-chip chip-thinking">GPT-5.5 Pro <span>harder tasks · higher accuracy</span></div>
+            <div class="model-chip chip-thinking">o3 / o3-pro <span>reasoning models</span></div>
+            <div class="model-chip chip-premium">GPT-5 mini <span>fast · cost-efficient</span></div>
           </div>
         </div>
         <div class="model-family-card">
           <div class="mf-provider">Anthropic</div>
           <div class="mf-models">
-            <div class="model-chip chip-thinking">Claude 3.7 Sonnet <span>coding + reasoning</span></div>
-            <div class="model-chip chip-default">Claude 3.5 Sonnet <span>fast + capable</span></div>
-            <div class="model-chip chip-default">Claude Haiku <span>lightweight</span></div>
+            <div class="model-chip chip-thinking">Claude Opus 4.8 <span>deep reasoning</span></div>
+            <div class="model-chip chip-default">Claude Sonnet 4.6 <span>daily driver</span></div>
+            <div class="model-chip chip-default">Claude Haiku 4.5 <span>lightweight</span></div>
           </div>
         </div>
         <div class="model-family-card">
           <div class="mf-provider">Google</div>
           <div class="mf-models">
-            <div class="model-chip chip-default">Gemini 2.0 Pro <span>multimodal</span></div>
-            <div class="model-chip chip-default">Gemini Flash <span>fast · often free</span></div>
+            <div class="model-chip chip-default">Gemini 3 Pro <span>reasoning + multimodal</span></div>
+            <div class="model-chip chip-default">Gemini 3 Flash <span>fast · price-performance</span></div>
           </div>
         </div>
         <div class="model-family-card">
-          <div class="mf-provider">Others</div>
+          <div class="mf-provider">Chinese Frontier</div>
           <div class="mf-models">
-            <div class="model-chip chip-alt">DeepSeek <span>Chinese · strong at code</span></div>
-            <div class="model-chip chip-alt">Mistral <span>French · Le Chat</span></div>
+            <div class="model-chip chip-alt">DeepSeek V4 Pro <span>reasoning-first</span></div>
+            <div class="model-chip chip-alt">DeepSeek V4 Flash <span>fast · open API</span></div>
+            <div class="model-chip chip-alt">Qwen3 <span>hybrid thinking · multilingual</span></div>
+            <div class="model-chip chip-alt">GLM-4.5 <span>agentic · long-context</span></div>
+            <div class="model-chip chip-alt">Kimi K2.5 <span>agent swarm · multimodal</span></div>
+          </div>
+        </div>
+        <div class="model-family-card">
+          <div class="mf-provider">Open-Weight</div>
+          <div class="mf-models">
+            <div class="model-chip chip-alt">Mistral Large 3 <span>open-weight · multimodal</span></div>
+            <div class="model-chip chip-alt">Mistral Medium 3.5 <span>agentic + coding</span></div>
+          </div>
+        </div>
+        <div class="model-family-card">
+          <div class="mf-provider">Meta Llama</div>
+          <div class="mf-models">
+            <div class="model-chip chip-alt">Llama 4 Scout <span>10M context · efficient</span></div>
+            <div class="model-chip chip-alt">Llama 4 Maverick <span>multimodal · fast responses</span></div>
+          </div>
+        </div>
+        <div class="model-family-card">
+          <div class="mf-provider">Gemma Open</div>
+          <div class="mf-models">
+            <div class="model-chip chip-alt">Gemma 3 27B <span>open weights · strongest class</span></div>
+            <div class="model-chip chip-alt">Gemma 3 12B <span>balanced · multimodal</span></div>
           </div>
         </div>
       </div>
@@ -224,9 +249,9 @@
     <div class="col-text fade-up">
       <div class="chapter-badge">Chapter 3 · Reasoning</div>
       <h2 class="section-title">Thinking<br><span>Models</span></h2>
-      <p class="body-text">OpenAI's <span class="highlight">o1, o1 Pro, o3, and o3-mini</span> are a different breed — all model names starting with "o" are thinking models. Before returning an answer, they run an extended internal monologue: exploring approaches, backtracking, trying alternatives.</p>
+      <p class="body-text">OpenAI's <span class="highlight">o3 and o3-pro</span> are a different breed — all model names starting with "o" are thinking models. Before returning an answer, they run an extended internal monologue: exploring approaches, backtracking, trying alternatives.</p>
       <p class="body-text">This emerged from reinforcement learning: the model discovered that deliberation strategies lead to better outcomes on hard problems. It tries different ideas, backtracks, checks its reasoning — much like the inner monologue you have when problem-solving.</p>
-      <p class="body-text">Karpathy noted that Claude 3.7 Sonnet (non-thinking) solved a hard coding problem that o1 Pro could not. Model selection isn't always obvious — the right tool depends on the specific task.</p>
+      <p class="body-text">Karpathy noted that Claude Opus 4.8 (non-thinking) solved a hard coding problem that o3-pro could not. Model selection isn't always obvious — the right tool depends on the specific task.</p>
       <div class="insight-box">
         <strong>When to use thinking models</strong>
         Hard math, complex multi-step code, formal reasoning, logic puzzles. Skip them for simple tasks — they're slower, more expensive, and deliberation helps less when there's nothing difficult to reason through.
@@ -235,7 +260,7 @@
     <div class="fade-up" style="animation-delay:.15s">
       <div class="thinking-demo" id="thinking-demo">
         <div class="thinking-header">
-          <span class="thinking-badge">o1 Pro · Extended Thinking</span>
+          <span class="thinking-badge">o3-pro · Extended Thinking</span>
           <span class="thinking-time" id="thinking-time">ready</span>
         </div>
         <div style="font-family:var(--dm);font-size:12px;color:var(--amber);margin-bottom:12px;padding:8px 10px;background:rgba(148,104,0,0.05);border-radius:var(--radius-sm);border:1px solid rgba(148,104,0,0.15)">"Prove that the sum of two odd numbers is always even."</div>
@@ -386,7 +411,7 @@
       <div class="doc-demo">
         <div class="doc-demo-header">
           <span class="doc-chip">The Wealth of Nations · Book I, Ch. 3</span>
-          <span class="doc-chip doc-chip-model">Claude 3.7 Sonnet</span>
+          <span class="doc-chip doc-chip-model">Claude Opus 4.8</span>
         </div>
         <div class="doc-chat">
           <div class="doc-msg doc-msg-user">Please create a conceptual diagram of this chapter</div>
@@ -470,7 +495,7 @@ plt.show()</div>
       <h2 class="section-title">Agentic<br><span>Coding</span></h2>
       <p class="body-text">Beyond chat, a new class of tools integrates LLMs directly into your code editor. <span class="highlight">Cursor</span> and <span class="highlight">Windsurf</span> run Claude or GPT under the hood, operating autonomously across your entire codebase — reading files, writing code, running commands, and iterating.</p>
       <p class="body-text">Cursor's <em>Composer</em> (⌘I) is an autonomous agent loop: describe a task, and it plans, writes files, runs shell commands, reads errors, and loops — asking your confirmation before any destructive action. Karpathy built a React app from scratch in a few minutes.</p>
-      <p class="body-text">The model under the hood in Karpathy's setup: Claude 3.7 Sonnet. The key insight is that these tools are most powerful when you understand the model well enough to guide and correct it, not just prompt and hope.</p>
+      <p class="body-text">The model under the hood in Karpathy's setup: Claude Opus 4.8. The key insight is that these tools are most powerful when you understand the model well enough to guide and correct it, not just prompt and hope.</p>
       <div class="insight-box">
         <strong>Cursor keyboard shortcuts</strong>
         <code style="font-family:var(--dm);font-size:12px;background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border)">⌘K</code> inline edit &nbsp;·&nbsp;
@@ -525,10 +550,10 @@ plt.show()</div>
 <section id="s-voice" class="section" aria-label="Voice and Audio">
   <div class="section-inner two-col">
     <div class="col-text fade-up">
-      <div class="chapter-badge">Chapter 9 · Multimodal</div>
+      <div class="chapter-badge">Chapter 9 · Multimodal <span class="updated-badge">Updated 2026</span></div>
       <h2 class="section-title">Voice &<br><span>Audio</span></h2>
       <p class="body-text">Karpathy routes roughly <span class="highlight">half his queries through voice</span> using Super Whisper — his pick among Super Whisper, WhisperFlow, and MacWhisper. Press a hotkey, speak, press again — query transcribed and sent. No typing, no friction.</p>
-      <p class="body-text">ChatGPT's <span class="highlight">Advanced Voice Mode</span> goes further: audio tokens flow directly to and from the model, with no text transcription layer. The result feels genuinely conversational, not a text-to-speech wrapper.</p>
+      <p class="body-text"><span class="highlight">Voice has become a three-layer stack:</span> capture/transcribe, high-quality synthesis, and native speech-to-speech. That now means tools like <span class="highlight">ElevenLabs</span> for expressive TTS and cloning, <span class="highlight">Xiaomi MiMo-V2.5 TTS</span> for speech synthesis and voice design, and <span class="highlight">OpenAI gpt-realtime</span> for low-latency conversational voice agents.</p>
       <p class="body-text"><span class="highlight">NotebookLM</span> (Google) generates audio podcasts from your documents. Upload papers, books, or notes — it produces a two-host discussion. Karpathy uses it on walks and long drives for passive learning on topics outside his expertise.</p>
       <div class="insight-box">
         <strong>Voice tip from Karpathy</strong>
@@ -565,13 +590,18 @@ plt.show()</div>
             <div class="va-desc">Global hotkey to record → auto-transcribe → paste anywhere. Works system-wide.</div>
           </div>
           <div class="va-card">
-            <div class="va-name">NotebookLM</div>
-            <div class="va-tag">Google · Free</div>
-            <div class="va-desc">Upload docs → generate a two-host podcast discussion. Good for passive learning.</div>
+            <div class="va-name">ElevenLabs</div>
+            <div class="va-tag">TTS · Voice design</div>
+            <div class="va-desc">Expressive speech synthesis, voice cloning, and high-quality character voices.</div>
           </div>
           <div class="va-card">
-            <div class="va-name">Advanced Voice</div>
-            <div class="va-tag">ChatGPT</div>
+            <div class="va-name">Xiaomi MiMo TTS</div>
+            <div class="va-tag">TTS · Voice stack</div>
+            <div class="va-desc">Speech synthesis, voice design, and multilingual support for agent workflows.</div>
+          </div>
+          <div class="va-card">
+            <div class="va-name">OpenAI Realtime</div>
+            <div class="va-tag">Speech-to-speech</div>
             <div class="va-desc">Native audio tokens — low latency, no transcription layer, genuinely conversational.</div>
           </div>
         </div>
@@ -683,13 +713,13 @@ plt.show()</div>
         <a href="https://claude.ai" target="_blank" rel="noopener" class="resource-card">
           <div class="rcard-name">Claude</div>
           <div class="rcard-by">Anthropic · claude.ai</div>
-          <div class="rcard-desc">Exceptional at coding and document analysis. Powers Cursor (Claude 3.7 Sonnet). Strong nuanced reasoning.</div>
+          <div class="rcard-desc">Exceptional at coding and document analysis. Powers Cursor (Claude Opus 4.8). Strong nuanced reasoning.</div>
           <div class="rcard-tags"><span class="tag tag-g">Coding</span><span class="tag tag-c">Docs</span></div>
         </a>
         <a href="https://gemini.google.com" target="_blank" rel="noopener" class="resource-card">
           <div class="rcard-name">Gemini</div>
           <div class="rcard-by">Google · gemini.google.com</div>
-          <div class="rcard-desc">Google's LLM app. Gemini 2.0 Pro experimental. Deep Google Workspace integration and strong multimodal.</div>
+          <div class="rcard-desc">Google's LLM app. Gemini 3 Pro preview. Deep Google Workspace integration and strong multimodal.</div>
           <div class="rcard-tags"><span class="tag tag-p">Multimodal</span></div>
         </a>
         <a href="https://perplexity.ai" target="_blank" rel="noopener" class="resource-card">
@@ -719,7 +749,7 @@ plt.show()</div>
         <a href="https://cursor.com" target="_blank" rel="noopener" class="resource-card">
           <div class="rcard-name">Cursor</div>
           <div class="rcard-by">Cursor · cursor.com</div>
-          <div class="rcard-desc">Karpathy's coding IDE of choice. Agentic Composer mode (⌘I) runs Claude 3.7 Sonnet across your entire codebase autonomously.</div>
+          <div class="rcard-desc">Karpathy's coding IDE of choice. Agentic Composer mode (⌘I) runs Claude Opus 4.8 across your entire codebase autonomously.</div>
           <div class="rcard-tags"><span class="tag tag-c">Karpathy's pick</span><span class="tag tag-g">Agentic</span></div>
         </a>
         <a href="https://windsurf.com" target="_blank" rel="noopener" class="resource-card">
@@ -808,7 +838,7 @@ plt.show()</div>
         <div class="ps-num">02</div>
         <div class="ps-content">
           <div class="ps-title" style="color:var(--accent)">Know your tier and model</div>
-          <div class="ps-desc">Free → limited. $20/mo → GPT-4o / Claude Sonnet. $200/mo → o1 Pro, Deep Research. Match the model to the task — thinking models for hard reasoning, fast models for simple queries.</div>
+          <div class="ps-desc">Free → limited. $20/mo → GPT-5.5 / Claude Opus 4.8. $200/mo → o3-pro, Deep Research. Match the model to the task — thinking models for hard reasoning, fast models for simple queries. For open-weight and Chinese alternatives, check DeepSeek-V4, Qwen3, GLM-4.5, Kimi K2.5, and Mistral Large 3.</div>
           <div class="ps-tags"><span class="tag tag-p">Models</span></div>
         </div>
       </div>
