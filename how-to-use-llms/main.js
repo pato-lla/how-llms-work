@@ -54,35 +54,50 @@
 // ═══════════════════════════════════════════════
 (function(){
   const el = document.getElementById('tw-response');
-  const messages = [
-    "It has no memory of you, its knowledge is 6–12 months stale, and every answer is a probabilistic sample. Treat it like a brilliant intern — not an oracle.",
-    "For timeless knowledge, skip web search — the weights are enough. For anything recent, time-sensitive, or esoteric — enable search or use Perplexity.",
-    "Voice removes half the friction. Super Whisper can route ~50% of your queries hands-free. Switch to typing for product names and library names Whisper gets wrong.",
-    "Thinking models (o1, o3) are for hard problems. They're slower and pricier — don't waste them on simple tasks. Claude Sonnet often beats o1 Pro on nuanced code."
-  ];
-  let mi = 0, ci = 0, deleting = false;
+  const getCopy = () => window.HowToUseLLMsI18n?.getCopy?.() || {
+    typewriter: { messages: [
+      "It has no memory of you, its knowledge is 6–12 months stale, and every answer is a probabilistic sample. Treat it like a brilliant intern — not an oracle.",
+      "For timeless knowledge, skip web search — the weights are enough. For anything recent, time-sensitive, or esoteric — enable search or use Perplexity.",
+      "Voice removes half the friction. Super Whisper can route ~50% of your queries hands-free. Switch to typing for product names and library names Whisper gets wrong.",
+      "Thinking models (o1, o3) are for hard problems. They're slower and pricier — don't waste them on simple tasks. Claude Sonnet often beats o1 Pro on nuanced code."
+    ] }
+  };
+  let mi = 0, ci = 0, deleting = false, runId = 0, messages = getCopy().typewriter.messages;
 
-  function type() {
+  function type(token) {
+    if (token !== runId) return;
     const msg = messages[mi];
     if (!deleting) {
       if (ci < msg.length) {
         el.innerHTML = msg.slice(0, ++ci) + '<span class="tw-cursor"></span>';
-        setTimeout(type, 24 + Math.random() * 18);
+        setTimeout(() => type(token), 24 + Math.random() * 18);
       } else {
-        setTimeout(() => { deleting = true; type(); }, 3200);
+        setTimeout(() => { deleting = true; type(token); }, 3200);
       }
     } else {
       if (ci > 0) {
         el.innerHTML = msg.slice(0, --ci) + '<span class="tw-cursor"></span>';
-        setTimeout(type, 10);
+        setTimeout(() => type(token), 10);
       } else {
         deleting = false;
         mi = (mi + 1) % messages.length;
-        setTimeout(type, 400);
+        setTimeout(() => type(token), 400);
       }
     }
   }
-  setTimeout(type, 1000);
+
+  function reset() {
+    messages = getCopy().typewriter.messages;
+    mi = 0;
+    ci = 0;
+    deleting = false;
+    runId += 1;
+    el.innerHTML = '<span class="tw-cursor" aria-hidden="true"></span>';
+    setTimeout(() => type(runId), 300);
+  }
+
+  window.addEventListener('llms:localechange', reset);
+  reset();
 })();
 
 // ═══════════════════════════════════════════════
@@ -95,30 +110,25 @@
   const timeEl = document.getElementById('thinking-time');
   const runBtn = document.getElementById('thinking-run-btn');
 
-  const steps = [
-    { icon: '🔍', text: "Let me think about what it means for a number to be odd..." },
-    { icon: '📐', text: "An odd number can be written as 2k+1 for some integer k. Let me use that definition." },
-    { icon: '🔄', text: "If I have two odd numbers: a = 2j+1 and b = 2k+1..." },
-    { icon: '➕', text: "Their sum: a + b = (2j+1) + (2k+1) = 2j + 2k + 2 = 2(j+k+1)" },
-    { icon: '✓', text: "Since j+k+1 is an integer, 2(j+k+1) is divisible by 2 — which is the definition of even." },
-  ];
-
-  const answer = "Let two odd integers be a = 2j+1 and b = 2k+1. Then a+b = 2j+1 + 2k+1 = 2(j+k+1). Since j+k+1 ∈ ℤ, the sum is even. □";
-
   let running = false;
+  const getCopy = () => window.HowToUseLLMsI18n?.getCopy?.() || null;
 
   runBtn.addEventListener('click', function() {
     if (running) return;
+    const copy = getCopy();
+    const thinking = copy?.thinking || {};
+    const steps = thinking.steps || [];
+    const answer = thinking.answer || '';
     running = true;
     runBtn.disabled = true;
-    runBtn.textContent = 'Thinking...';
+    runBtn.textContent = thinking.statusThinking || 'Thinking...';
     stepsEl.innerHTML = '';
     answerEl.style.display = 'none';
 
     let elapsed = 0;
     const timer = setInterval(() => {
       elapsed++;
-      timeEl.textContent = `thinking for ${elapsed}s...`;
+      timeEl.textContent = (thinking.statusElapsed || 'thinking for {n}s...').replace('{n}', elapsed);
     }, 1000);
 
     steps.forEach((step, i) => {
@@ -132,11 +142,13 @@
 
     setTimeout(() => {
       clearInterval(timer);
-      timeEl.textContent = `thought for ${steps.length - 1}s`;
+      timeEl.textContent = (thinking.statusDone || 'thought for {n}s').replace('{n}', Math.max(steps.length - 1, 0));
       answerEl.style.display = 'block';
+      const label = answerEl.querySelector('.ta-label');
+      if (label) label.textContent = thinking.answerLabel || 'Answer';
       contentEl.textContent = answer;
       runBtn.disabled = false;
-      runBtn.textContent = '↺ Run again';
+      runBtn.textContent = thinking.buttonAgain || '↺ Run again';
       running = false;
     }, steps.length * 700 + 300);
   });
@@ -150,6 +162,7 @@
   const resultEl = document.getElementById('rp-result');
   const steps = [0,1,2,3].map(i => document.getElementById(`rp-s${i}`));
   let running = false;
+  const getCopy = () => window.HowToUseLLMsI18n?.getCopy?.() || null;
 
   function resetSteps() {
     steps.forEach(s => s && s.classList.remove('rp-active'));
@@ -158,9 +171,11 @@
 
   function runDemo() {
     if (running) return;
+    const copy = getCopy();
+    const research = copy?.research || {};
     running = true;
     runBtn.disabled = true;
-    runBtn.textContent = 'Simulating...';
+    runBtn.textContent = research.buttonRunning || 'Simulating...';
     resetSteps();
 
     const timings = [0, 800, 1700, 2700];
@@ -174,7 +189,7 @@
     setTimeout(() => {
       resultEl.style.display = 'block';
       runBtn.disabled = false;
-      runBtn.textContent = '↺ Simulate again';
+      runBtn.textContent = research.buttonAgain || '↺ Simulate again';
       running = false;
     }, 3700);
   }
@@ -189,6 +204,7 @@
   const runBtn = document.getElementById('code-run-btn');
   const steps = [0,1,2].map(i => document.getElementById(`cd-step-${i}`));
   let running = false;
+  const getCopy = () => window.HowToUseLLMsI18n?.getCopy?.() || null;
 
   function drawChart() {
     const canvas = document.getElementById('chart-canvas');
@@ -274,6 +290,8 @@
 
   runBtn.addEventListener('click', function() {
     if (running) return;
+    const copy = getCopy();
+    const code = copy?.code || {};
     running = true;
     runBtn.disabled = true;
     steps.forEach(s => { if (s) s.style.display = 'none'; });
@@ -292,7 +310,7 @@
       steps[2].style.display = 'block';
       drawChart();
       runBtn.disabled = false;
-      runBtn.textContent = '↺ Run again';
+      runBtn.textContent = code.buttonAgain || '↺ Run again';
       running = false;
     }, 2400);
   });
@@ -305,9 +323,12 @@
   const runBtn = document.getElementById('al-run-btn');
   const steps = [0,1,2,3].map(i => document.getElementById(`al-s${i}`));
   let running = false;
+  const getCopy = () => window.HowToUseLLMsI18n?.getCopy?.() || null;
 
   runBtn.addEventListener('click', function() {
     if (running) return;
+    const copy = getCopy();
+    const agent = copy?.agent || {};
     running = true;
     runBtn.disabled = true;
     steps.forEach(s => s && s.classList.remove('al-active'));
@@ -321,7 +342,7 @@
       } else {
         clearInterval(interval);
         runBtn.disabled = false;
-        runBtn.textContent = '↺ Animate again';
+        runBtn.textContent = agent.buttonAgain || '↺ Animate again';
         running = false;
       }
     }, 600);
@@ -345,21 +366,31 @@
     progressBar.setAttribute('aria-valuenow', pct);
   }, {passive: true});
 
-  document.querySelectorAll('.fade-up').forEach(el => el.classList.add('animate-ready'));
+  const fadeItems = Array.from(document.querySelectorAll('.fade-up'));
+  fadeItems.forEach((el, i) => {
+    el.classList.add('animate-ready');
+    el.style.transitionDelay = `${Math.min(i, 6) * 32}ms`;
+  });
 
   const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
+      entry.target.classList.toggle('visible', entry.isIntersecting);
     });
-  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.03, rootMargin: '0px 0px -4% 0px' });
 
-  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+  fadeItems.forEach(el => fadeObserver.observe(el));
+
+  pipelineStages.forEach((s, i) => {
+    s.classList.add('animate-ready');
+    s.style.transitionDelay = `${i * 72}ms`;
+  });
 
   const pipelineObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        pipelineStages.forEach((s, i) => setTimeout(() => s.classList.add('visible'), i * 120));
-        pipelineObserver.disconnect();
+        pipelineStages.forEach(s => s.classList.add('visible'));
+      } else {
+        pipelineStages.forEach(s => s.classList.remove('visible'));
       }
     });
   }, { threshold: 0.05 });
@@ -373,7 +404,6 @@
       btn.classList.toggle('active', isActive);
       if (isActive) {
         btn.setAttribute('aria-current', 'true');
-        btn.scrollIntoView({block:'nearest', inline:'center'});
       } else {
         btn.removeAttribute('aria-current');
       }
@@ -391,7 +421,8 @@
   navBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const section = document.getElementById(btn.dataset.section);
-      if (section) section.scrollIntoView({ behavior: 'smooth' });
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
+
 })();

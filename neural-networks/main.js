@@ -1,3 +1,11 @@
+function nnLocale() {
+  return document.documentElement.lang === 'es' ? 'es' : 'en';
+}
+
+function nnText(en, es) {
+  return nnLocale() === 'es' ? es : en;
+}
+
 // Scale canvas to device pixel ratio, mapping nativeW×nativeH coordinate space
 // to the full CSS display area so drawings look crisp on Retina.
 function scaleCanvas(canvas, nativeW, nativeH) {
@@ -71,15 +79,22 @@ function scaleCanvas(canvas, nativeW, nativeH) {
 (function(){
   const el = document.getElementById('tw-response');
   if (!el) return;
-  const messages = [
-    "A neural network is a function with millions of adjustable knobs (weights). Training turns the knobs until the function's outputs match the examples it's shown.",
-    "Every word GPT generates is computed by the same forward pass you'll build here — just with 405 billion weights instead of 19.",
-    "Backpropagation isn't magic: it's the chain rule applied recursively. Every weight gets told exactly how much it contributed to the error.",
-    "Gradient descent is just: move each weight a tiny step in the direction that reduces the loss. Repeat a billion times. That's training."
-  ];
   let mi = 0, ci = 0, deleting = false;
 
   function type() {
+    const messages = nnLocale() === 'es'
+      ? [
+          'Una red neuronal es una función con millones de perillas ajustables (pesos). El entrenamiento gira esas perillas hasta que las salidas coinciden con los ejemplos que ve.',
+          'Cada palabra que genera GPT se calcula con el mismo paso hacia adelante que vas a construir aquí, solo que con 405.000 millones de pesos en lugar de 19.',
+          'La retropropagación no es magia: es la regla de la cadena aplicada de forma recursiva. Cada peso recibe exactamente cuánto contribuyó al error.',
+          'El descenso de gradiente consiste en mover cada peso un pequeño paso en la dirección que reduce la pérdida. Repetir mil millones de veces. Eso es entrenar.'
+        ]
+      : [
+          "A neural network is a function with millions of adjustable knobs (weights). Training turns the knobs until the function's outputs match the examples it's shown.",
+          "Every word GPT generates is computed by the same forward pass you'll build here — just with 405 billion weights instead of 19.",
+          "Backpropagation isn't magic: it's the chain rule applied recursively. Every weight gets told exactly how much it contributed to the error.",
+          "Gradient descent is just: move each weight a tiny step in the direction that reduces the loss. Repeat a billion times. That's training."
+        ];
     const msg = messages[mi];
     if (!deleting) {
       if (ci < msg.length) {
@@ -99,6 +114,12 @@ function scaleCanvas(canvas, nativeW, nativeH) {
       }
     }
   }
+  function restart() {
+    mi = 0; ci = 0; deleting = false;
+    el.textContent = '';
+    setTimeout(type, 200);
+  }
+  window.addEventListener('i18nchange', restart);
   setTimeout(type, 1200);
 })();
 
@@ -128,7 +149,7 @@ function scaleCanvas(canvas, nativeW, nativeH) {
 
   btns.forEach(b => b.addEventListener('click', () => {
     const target = document.getElementById(b.dataset.section);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
 
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -139,23 +160,25 @@ function scaleCanvas(canvas, nativeW, nativeH) {
 // FADE-UP OBSERVER
 // ═══════════════════════════════════════════════
 (function(){
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
-  }, { threshold: 0.08 });
-
-  document.querySelectorAll('.fade-up').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .6s ease, transform .6s ease';
-    observer.observe(el);
+  const fadeItems = Array.from(document.querySelectorAll('.fade-up'));
+  fadeItems.forEach((el, i) => {
+    el.classList.add('animate-ready');
+    el.style.transitionDelay = `${Math.min(i, 6) * 32}ms`;
   });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { e.target.classList.toggle('visible', e.isIntersecting); });
+  }, { threshold: 0.03, rootMargin: '0px 0px -4% 0px' });
+
+  fadeItems.forEach(el => observer.observe(el));
 
   // Pipeline stages
   const stageObserver = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    entries.forEach(e => { e.target.classList.toggle('visible', e.isIntersecting); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.pipeline-stage').forEach((el, i) => {
-    el.style.transitionDelay = `${i * 0.12}s`;
+    el.classList.add('animate-ready');
+    el.style.transitionDelay = `${i * 72}ms`;
     stageObserver.observe(el);
   });
 })();
@@ -168,25 +191,45 @@ function scaleCanvas(canvas, nativeW, nativeH) {
   if (!svg) return;
 
   const layers = [[60, [40,80,120,160]], [170, [60,100,140]], [280, [100]]];
-  const labels = ['Input\n(4)', 'Hidden\n(3)', 'Output\n(1)'];
   const colors = ['#946800', '#635BFF', '#00875A'];
-  let html = '';
 
-  layers.forEach(([x, ys], li) => {
-    ys.forEach((y, ni) => {
-      layers.forEach(([x2, ys2], li2) => {
-        if (li2 !== li + 1) return;
-        ys2.forEach(y2 => {
-          html += `<line x1="${x+14}" y1="${y}" x2="${x2-14}" y2="${y2}" stroke="${colors[li]}20" stroke-width="1"/>`;
+  function isDark() {
+    return document.documentElement.dataset.theme === 'dark';
+  }
+
+  function render() {
+    const labels = nnLocale() === 'es'
+      ? ['Entrada\n(4)', 'Capa oculta\n(3)', 'Salida\n(1)']
+      : ['Input\n(4)', 'Hidden\n(3)', 'Output\n(1)'];
+    const dark = isDark();
+    const lineOpacity = dark ? 0.14 : 0.12;
+    const lineStrokeWidth = dark ? 1.15 : 1.05;
+    const textOpacity = dark ? 0.88 : 1;
+    const labelOpacity = dark ? 0.82 : 1;
+    let lines = '';
+    let nodes = '';
+
+    layers.forEach(([x, ys], li) => {
+      ys.forEach((y, ni) => {
+        layers.forEach(([x2, ys2], li2) => {
+          if (li2 !== li + 1) return;
+          ys2.forEach(y2 => {
+            lines += `<line x1="${x+14}" y1="${y}" x2="${x2-14}" y2="${y2}" stroke="${colors[li]}" stroke-opacity="${lineOpacity}" stroke-width="${lineStrokeWidth}" stroke-linecap="round"/>`;
+          });
         });
+        nodes += `<circle cx="${x}" cy="${y}" r="14" fill="${colors[li]}15" stroke="${colors[li]}60" stroke-width="1.5"/>`;
+        nodes += `<text x="${x}" y="${y+4}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${colors[li]}" fill-opacity="${textOpacity}">${li===0?'x'+(ni+1):li===1?'h'+(ni+1):'ŷ'}</text>`;
       });
-      html += `<circle cx="${x}" cy="${y}" r="14" fill="${colors[li]}15" stroke="${colors[li]}60" stroke-width="1.5"/>`;
-      html += `<text x="${x}" y="${y+4}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${colors[li]}">${li===0?'x'+(ni+1):li===1?'h'+(ni+1):'ŷ'}</text>`;
+      nodes += `<text x="${x}" y="195" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--txt2)" fill-opacity="${labelOpacity}">${labels[li]}</text>`;
     });
-    html += `<text x="${x}" y="195" text-anchor="middle" font-family="Inter" font-size="10" fill="#697386">${labels[li]}</text>`;
-  });
 
-  svg.innerHTML = html;
+    svg.innerHTML = `<g class="mlp-lines">${lines}</g><g class="mlp-nodes">${nodes}</g>`;
+  }
+
+  render();
+  window.addEventListener('i18nchange', render);
+  window.addEventListener('themechange', render);
+  window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', render);
 })();
 
 // ═══════════════════════════════════════════════
@@ -343,7 +386,7 @@ function scaleCanvas(canvas, nativeW, nativeH) {
       }
     });
     // Labels
-    [[40,195,'Input\nx=[1.0, 0.5]'],[160,195,'Hidden\n(tanh)'],[290,195,'Output']].forEach(([x,y,lbl]) => {
+    [[40,195,nnText('Input\nx=[1.0, 0.5]', 'Entrada\nx=[1.0, 0.5]')],[160,195,nnText('Hidden\n(tanh)', 'Oculta\n(tanh)')],[290,195,nnText('Output', 'Salida')]].forEach(([x,y,lbl]) => {
       lbl.split('\n').forEach((line, i) => {
         html += `<text x="${x}" y="${y + i*13}" text-anchor="middle" font-family="Inter" font-size="9" fill="#697386">${line}</text>`;
       });
@@ -423,11 +466,11 @@ function scaleCanvas(canvas, nativeW, nativeH) {
 
     // Labels
     ctx.fillStyle = '#697386'; ctx.font = '10px JetBrains Mono'; ctx.textAlign = 'left';
-    ctx.fillText('Loss ↑', 6, 16);
+    ctx.fillText(nnText('Loss ↑', 'Pérdida ↑'), 6, 16);
     ctx.textAlign = 'center';
-    ctx.fillText('weight →', W/2, H - 2);
+    ctx.fillText(nnText('weight →', 'peso →'), W/2, H - 2);
     ctx.fillStyle = '#00875A';
-    ctx.fillText('min', wToX(0), lossToY(0.3) - 10);
+    ctx.fillText(nnText('min', 'mín'), wToX(0), lossToY(0.3) - 10);
 
     // Current values display
     document.getElementById('loss-w-val').textContent = w.toFixed(3);
@@ -510,11 +553,11 @@ function scaleCanvas(canvas, nativeW, nativeH) {
 
     // Slope label
     ctx.fillStyle = '#DF1B41'; ctx.font = 'bold 11px JetBrains Mono'; ctx.textAlign = 'center';
-    ctx.fillText(`slope = ${slope.toFixed(2)}`, px, py - 14);
+    ctx.fillText(nnText(`slope = ${slope.toFixed(2)}`, `pendiente = ${slope.toFixed(2)}`), px, py - 14);
 
     // Axis labels
     ctx.fillStyle = '#697386'; ctx.font = '10px Inter'; ctx.textAlign = 'center';
-    ctx.fillText('f(x) = x²', xToCanvas(2.5), yToCanvas(8));
+    ctx.fillText(nnText('f(x) = x²', 'f(x) = x²'), xToCanvas(2.5), yToCanvas(8));
     ctx.fillText('x', W - PAD + 10, yToCanvas(0) + 4);
     ctx.textAlign = 'left';
     ctx.fillText('f(x)', xToCanvas(0) + 4, PAD + 10);
@@ -558,8 +601,8 @@ function scaleCanvas(canvas, nativeW, nativeH) {
   const tooltip = document.getElementById('bp-tooltip');
   if (!svg || !fwdBtn) return;
 
-  // Node positions in viewBox 0 0 420 200
-  const NL = { a:{x:50,y:70}, b:{x:50,y:150}, c:{x:170,y:110}, d:{x:290,y:70}, e:{x:400,y:70} };
+  // Node positions in viewBox 0 0 440 200
+  const NL = { a:{x:50,y:70}, b:{x:50,y:150}, c:{x:170,y:110}, d:{x:290,y:70}, e:{x:408,y:70} };
   const EDGES = [
     {from:'a',to:'c',op:'×',formula:'∂c/∂a = b'},
     {from:'b',to:'c',op:'×',formula:'∂c/∂b = a'},
@@ -602,6 +645,10 @@ function scaleCanvas(canvas, nativeW, nativeH) {
   function render() {
     const showVals  = phase !== 'idle';
     const showGrads = phase === 'backprop' && backStep >= 0;
+    const dark = document.documentElement.dataset.theme === 'dark';
+    const edgeStroke = dark ? '#F8FAFF' : '#E3E8EF';
+    const edgeLabel = dark ? '#D2DAE8' : '#697386';
+    const nodeTextOpacity = dark ? '0.96' : '1';
 
     let html = '';
 
@@ -609,13 +656,13 @@ function scaleCanvas(canvas, nativeW, nativeH) {
       const f=NL[from], t=NL[to];
       const lit = litEdges.has(from+'-'+to);
       html += `<line x1="${f.x+24}" y1="${f.y}" x2="${t.x-24}" y2="${t.y}"
-        stroke="${lit?'#635BFF':'#E3E8EF'}" stroke-width="${lit?2.5:1.5}"
+        stroke="${lit?'#635BFF':edgeStroke}" stroke-width="${lit?2.5:1.5}"
         data-edge="${from}-${to}" data-formula="${formula}" style="cursor:${showVals?'pointer':'default'}"/>`;
       const mx=(f.x+24+t.x-24)/2, my=(f.y+t.y)/2;
       if (lit) {
         html += `<polygon points="${mx-4},${my-3} ${mx+4},${my-3} ${mx},${my+5}" fill="#635BFF"/>`;
       }
-      html += `<text x="${mx}" y="${my-6}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#697386">${op}</text>`;
+      html += `<text x="${mx}" y="${my-6}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${edgeLabel}" fill-opacity="${nodeTextOpacity}">${op}</text>`;
     });
 
     Object.keys(NL).forEach(id => {
@@ -626,21 +673,21 @@ function scaleCanvas(canvas, nativeW, nativeH) {
         fill="${isLit?color+'28':color+'14'}" stroke="${isLit?color+'cc':color+'55'}"
         stroke-width="${isLit?2:1.5}"/>`;
       const lbl = id==='c'?'c=a·b':id==='d'?'d=c+a':id==='e'?'e=tanh':id;
-      html += `<text x="${x}" y="${y-9}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${color}">${lbl}</text>`;
+      html += `<text x="${x}" y="${y-9}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${color}" fill-opacity="${nodeTextOpacity}">${lbl}</text>`;
 
       if (showVals && vals[id]!==undefined) {
-        html += `<text x="${x}" y="${y+5}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="bold" fill="${color}">${vals[id].toFixed(3)}</text>`;
+        html += `<text x="${x}" y="${y+5}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="bold" fill="${color}" fill-opacity="${nodeTextOpacity}">${vals[id].toFixed(3)}</text>`;
       } else {
-        html += `<text x="${x}" y="${y+5}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#C8D0DC">val=?</text>`;
+        html += `<text x="${x}" y="${y+5}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#C8D0DC">${nnText('val=?', 'valor=?')}</text>`;
       }
 
       if (showGrads && isLit && grads[id]!==undefined) {
         const g=grads[id], gc=g>0?'#00875A':g<0?'#DF1B41':'#697386';
-        html += `<text x="${x}" y="${y+18}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${gc}">∂=${g.toFixed(4)}</text>`;
+        html += `<text x="${x}" y="${y+18}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${gc}" fill-opacity="${nodeTextOpacity}">∂=${g.toFixed(4)}</text>`;
         const bw2=Math.min(40,Math.abs(g)*30);
         html += `<rect x="${x-bw2/2}" y="${y+22}" width="${bw2}" height="3" rx="1.5" fill="${gc}88"/>`;
       } else if (showVals) {
-        html += `<text x="${x}" y="${y+18}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#C8D0DC">grad=?</text>`;
+        html += `<text x="${x}" y="${y+18}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#C8D0DC">${nnText('grad=?', 'grad=?')}</text>`;
       }
     });
 
@@ -663,7 +710,7 @@ function scaleCanvas(canvas, nativeW, nativeH) {
     phase='idle'; backStep=-1; litEdges.clear(); vals={}; grads={};
     clearTimeout(backTimer);
     fwdBtn.disabled=false; backBtn.disabled=true;
-    if (statusEl) statusEl.textContent='Edit a and b, then click Forward Pass';
+    if (statusEl) statusEl.textContent = nnText('Edit a and b, then click Forward Pass', 'Edita a y b y luego pulsa Paso adelante');
     render();
   }
 
@@ -672,7 +719,7 @@ function scaleCanvas(canvas, nativeW, nativeH) {
     vals=result.vals; grads=result.grads;
     phase='forward'; backStep=-1; litEdges.clear();
     fwdBtn.disabled=true; backBtn.disabled=false;
-    if (statusEl) statusEl.textContent=`Forward: e = tanh(${vals.d.toFixed(3)}) = ${vals.e.toFixed(4)}`;
+    if (statusEl) statusEl.textContent = nnText(`Forward: e = tanh(${vals.d.toFixed(3)}) = ${vals.e.toFixed(4)}`, `Paso adelante: e = tanh(${vals.d.toFixed(3)}) = ${vals.e.toFixed(4)}`);
     render();
   }
 
@@ -683,11 +730,11 @@ function scaleCanvas(canvas, nativeW, nativeH) {
 
     function step() {
       if (backStep >= BACK_ORDER.length) {
-        if (statusEl) statusEl.textContent='Backprop complete — all gradients computed via chain rule.';
+        if (statusEl) statusEl.textContent = nnText('Backprop complete — all gradients computed via chain rule.', 'Retropropagación completa: todos los gradientes se calcularon con la regla de la cadena.');
         render(); return;
       }
       (BACK_EDGE_STEPS[backStep]||[]).forEach(e => litEdges.add(e));
-      if (statusEl) statusEl.textContent=`∂L/∂${BACK_ORDER[backStep]} = ${grads[BACK_ORDER[backStep]]?.toFixed(4)??'?'}`;
+      if (statusEl) statusEl.textContent = nnText(`∂L/∂${BACK_ORDER[backStep]} = ${grads[BACK_ORDER[backStep]]?.toFixed(4)??'?'}`, `∂L/∂${BACK_ORDER[backStep]} = ${grads[BACK_ORDER[backStep]]?.toFixed(4)??'?'}`);
       backStep++;
       render();
       backTimer = setTimeout(step, 500);
@@ -763,8 +810,8 @@ function scaleCanvas(canvas, nativeW, nativeH) {
     ctx.beginPath(); ctx.moveTo(PAD.left, H-PAD.bottom); ctx.lineTo(W-PAD.right, H-PAD.bottom); ctx.stroke();
 
     ctx.fillStyle = '#697386'; ctx.font = '9px JetBrains Mono'; ctx.textAlign = 'center';
-    ctx.fillText('Training Steps →', W/2, H-4);
-    ctx.save(); ctx.rotate(-Math.PI/2); ctx.fillText('Loss', -H/2, 12); ctx.restore();
+    ctx.fillText(nnText('Training Steps →', 'Pasos de entrenamiento →'), W/2, H-4);
+    ctx.save(); ctx.rotate(-Math.PI/2); ctx.fillText(nnText('Loss', 'Pérdida'), -H/2, 12); ctx.restore();
   }
 
   function animate() {

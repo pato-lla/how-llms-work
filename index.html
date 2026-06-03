@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<script>
+(function() {
+  try {
+    var theme = localStorage.getItem('how-llms-theme') || 'system';
+    var resolved = theme === 'dark' || theme === 'light'
+      ? theme
+      : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.theme = resolved;
+    document.documentElement.style.backgroundColor = resolved === 'dark' ? '#0B1220' : '#FFFFFF';
+    document.documentElement.style.colorScheme = resolved;
+  } catch (e) {}
+})();
+</script>
 <title>How LLMs Work — A Visual Deep Dive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +48,17 @@
       <button class="tnav-btn" data-section="s-security">Security</button>
       <button class="tnav-btn" data-section="s-summary">Pipeline</button>
     </div>
+    <div class="top-nav-tools" aria-label="Language and theme controls">
+      <div class="toggle-group" role="group" aria-label="Language selector">
+        <button class="toggle-btn active" id="lang-en" type="button" data-locale="en" aria-pressed="true" aria-label="English">🇬🇧</button>
+        <button class="toggle-btn" id="lang-es" type="button" data-locale="es" aria-pressed="false" aria-label="Spanish">🇪🇸</button>
+      </div>
+      <div class="toggle-group" role="group" aria-label="Theme selector">
+        <button class="toggle-btn" id="theme-system" type="button" data-theme="system" aria-pressed="true" aria-label="System theme">◐</button>
+        <button class="toggle-btn" id="theme-light" type="button" data-theme="light" aria-pressed="false" aria-label="Light theme">☀</button>
+        <button class="toggle-btn" id="theme-dark" type="button" data-theme="dark" aria-pressed="false" aria-label="Dark theme">☾</button>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -53,7 +78,7 @@
           <div class="stat-item"><dt class="stat-lbl">Token Vocabulary</dt><dd class="stat-val">100K</dd></div>
         </dl>
         <p class="stats-caveat">Representative figures from frontier models circa 2024 — exact numbers shift with every release. The scale is the point, not the precision.</p>
-        <div class="scroll-hint" aria-hidden="true"><div class="scroll-arrow"></div>Scroll to explore</div>
+        <a class="scroll-hint" href="#s-data" aria-label="Scroll to explore"><div class="scroll-arrow"></div>Scroll to explore</a>
       </div>
       <div class="hero-right">
         <div class="typewriter-wrap" aria-label="Example LLM conversation">
@@ -672,14 +697,14 @@
     </div>
 
     <div class="fade-up" style="text-align:center;margin-top:60px">
-      <p class="body-text" style="max-width:560px;margin:0 auto;color:var(--txt2)">Built from Andrej Karpathy's <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener" style="color:var(--accent)">"Intro to Large Language Models"</a> lecture — all facts, figures, and framings traced back to that source. Interactive visualizations built with AI assistance. The most important takeaway: every word generated is a probabilistic sample — a biased coin flip, at 100K-way scale, billions of times.</p>
-      <p class="body-text" style="max-width:560px;margin:12px auto 0;font-size:13.5px;color:var(--txt2)">This was <a href="https://news.ycombinator.com/item?id=47886517" target="_blank" rel="noopener" style="color:var(--accent)">posted to Hacker News</a> and drew heated debate about it being LLM-generated. That's a fair observation — the implementation was AI-assisted. But the content isn't the AI's: every claim, figure, and framing in this guide comes directly from Karpathy's lecture, not from a model hallucinating about LLMs.</p>
+      <p id="footer-copy" class="body-text" style="max-width:560px;margin:0 auto;color:var(--txt2)">Built from Andrej Karpathy's <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener" style="color:var(--accent)">"Intro to Large Language Models"</a> lecture — all facts, figures, and framings traced back to that source. Interactive visualizations built with AI assistance. The most important takeaway: every word generated is a probabilistic sample — a biased coin flip, at 100K-way scale, billions of times.</p>
+      <p id="footer-note" class="body-text" style="max-width:560px;margin:12px auto 0;font-size:13.5px;color:var(--txt2)">This was <a href="https://news.ycombinator.com/item?id=47886517" target="_blank" rel="noopener" style="color:var(--accent)">posted to Hacker News</a> and drew heated debate about it being LLM-generated. That's a fair observation — the implementation was AI-assisted. But the content isn't the AI's: every claim, figure, and framing in this guide comes directly from Karpathy's lecture, not from a model hallucinating about LLMs.</p>
       <p style="margin-top:16px;font-family:var(--ds);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2)">
         <a href="https://news.ycombinator.com/item?id=47886517" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">HN discussion</a>
         <span style="margin:0 12px;opacity:.4">·</span>
         <a href="https://github.com/ynarwal/how-llms-work" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">GitHub</a>
         <span style="margin:0 12px;opacity:.4">·</span>
-        <a href="transcript.txt" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">Full lecture transcript</a>
+        <a href="transcript.html" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">Full lecture transcript</a>
         <span style="margin:0 12px;opacity:.4">·</span>
         <a href="hn-update-comment.txt" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">HN update note</a>
         <span style="margin:0 12px;opacity:.4">·</span>
@@ -693,6 +718,7 @@
   </div>
 </section>
 
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Full Transcript — How LLMs Work</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="transcript.css">
+  <script>
+    (() => {
+      const browserLocale = (navigator.language || 'en').toLowerCase();
+      const locale = localStorage.getItem('how-llms-locale') || (browserLocale.startsWith('es') ? 'es' : 'en');
+      const theme = localStorage.getItem('how-llms-theme') || 'system';
+      const resolved = theme !== 'system' ? theme : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = resolved;
+      document.documentElement.lang = locale;
+      document.documentElement.style.backgroundColor = resolved === 'dark' ? '#0B1220' : '#FFFFFF';
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to main content</a>
+
+  <div class="progress-bar" id="progress"></div>
+
+  <nav class="top-nav" aria-label="Transcript controls">
+    <div class="top-nav-inner">
+      <a class="top-nav-brand" href="index.html">How LLMs Work</a>
+      <div class="top-nav-links">
+        <a class="tnav-btn" href="index.html" id="back-link">← Back</a>
+      </div>
+      <div class="top-nav-tools">
+        <div class="toggle-group" role="group" aria-label="Language and theme controls">
+          <button class="toggle-btn" type="button" data-locale="en" aria-label="English">🇬🇧</button>
+          <button class="toggle-btn" type="button" data-locale="es" aria-label="Español">🇪🇸</button>
+        </div>
+        <div class="toggle-group" role="group" aria-label="Theme controls">
+          <button class="toggle-btn" type="button" data-theme="system" aria-label="System theme">◐</button>
+          <button class="toggle-btn" type="button" data-theme="light" aria-label="Light theme">☀</button>
+          <button class="toggle-btn" type="button" data-theme="dark" aria-label="Dark theme">☾</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="content">
+    <section class="section transcript-section">
+      <div class="section-inner transcript-shell">
+        <div class="transcript-hero fade-up">
+          <div class="chapter-badge" id="transcript-badge">Full Transcript</div>
+          <h1 class="section-title" id="transcript-title">Full Transcript</h1>
+          <p class="body-text transcript-subtitle" id="transcript-subtitle">
+            A cleaned reading version of Andrej Karpathy's lecture transcript, split into readable paragraphs.
+          </p>
+          <div class="transcript-meta">
+            <span id="transcript-source-label">Source lecture</span>
+            <a id="transcript-source" href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Intro to Large Language Models</a>
+          </div>
+          <div class="transcript-actions">
+            <button class="btn btn-primary" id="download-cta" type="button">Download .txt</button>
+          </div>
+        </div>
+
+        <article class="transcript-article fade-up" id="transcript-article" aria-label="Transcript text"></article>
+      </div>
+    </section>
+  </main>
+
+  <script src="transcript-data.js"></script>
+  <script src="transcript.js"></script>
+</body>
+</html>

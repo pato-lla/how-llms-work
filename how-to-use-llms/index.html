@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<script>
+(function() {
+  try {
+    var theme = localStorage.getItem('how-llms-theme') || 'system';
+    var resolved = theme === 'dark' || theme === 'light'
+      ? theme
+      : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.theme = resolved;
+    document.documentElement.style.backgroundColor = resolved === 'dark' ? '#0B1220' : '#FFFFFF';
+    document.documentElement.style.colorScheme = resolved;
+  } catch (e) {}
+})();
+</script>
 <title>How to Use LLMs — A Practical Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,6 +47,17 @@
       <button class="tnav-btn" data-section="s-resources">Resources</button>
       <button class="tnav-btn" data-section="s-summary">Summary</button>
     </div>
+    <div class="top-nav-tools" aria-label="Language and theme controls">
+      <div class="toggle-group" role="group" aria-label="Language selector">
+        <button class="toggle-btn active" id="lang-en" type="button" data-locale="en" aria-pressed="true" aria-label="English">🇬🇧</button>
+        <button class="toggle-btn" id="lang-es" type="button" data-locale="es" aria-pressed="false" aria-label="Spanish">🇪🇸</button>
+      </div>
+      <div class="toggle-group" role="group" aria-label="Theme selector">
+        <button class="toggle-btn" id="theme-system" type="button" data-theme="system" aria-pressed="true" aria-label="System theme">◐</button>
+        <button class="toggle-btn" id="theme-light" type="button" data-theme="light" aria-pressed="false" aria-label="Light theme">☀</button>
+        <button class="toggle-btn" id="theme-dark" type="button" data-theme="dark" aria-pressed="false" aria-label="Dark theme">☾</button>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -52,7 +77,7 @@
           <div class="stat-item"><dt class="stat-lbl">Source</dt><dd class="stat-val">3h</dd></div>
         </dl>
         <p class="stats-caveat">Companion to <a href="../index.html" style="color:var(--accent)">Part 1: How LLMs Work</a>. All content and examples traced directly to Karpathy's 2025 video.</p>
-        <div class="scroll-hint" aria-hidden="true"><div class="scroll-arrow"></div>Scroll to explore</div>
+        <a class="scroll-hint" href="#s-mental-model" aria-label="Scroll to explore"><div class="scroll-arrow"></div>Scroll to explore</a>
       </div>
       <div class="hero-right">
         <div class="typewriter-wrap" aria-label="Practical LLM tip">
@@ -367,7 +392,8 @@
           <div class="doc-msg doc-msg-ai">
             <div class="doc-code-block">
               <div class="dcb-label">mermaid</div>
-              <pre>graph TD
+              <div class="mermaid-diagram" id="doc-mermaid-diagram" aria-label="Mermaid diagram"></div>
+              <pre id="doc-mermaid-source">graph TD
   A[Division of Labor] -->|limited by| B[Extent of Market]
   B --> C[Local Market]
   B --> D[Trade Networks]
@@ -837,7 +863,7 @@ plt.show()</div>
       <p style="margin-top:16px;font-family:var(--ds);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2)">
         <a href="../index.html" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">← Part 1: How LLMs Work</a>
         <span style="margin:0 12px;opacity:.4">·</span>
-        <a href="transcript.txt" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">Full transcript</a>
+        <a href="transcript.html" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">Full transcript</a>
         <span style="margin:0 12px;opacity:.4">·</span>
         <a href="https://github.com/ynarwal/how-llms-work" target="_blank" rel="noopener" style="color:var(--txt2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:1px;transition:.2s" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--txt2)';this.style.borderColor='var(--border)'">GitHub</a>
       </p>
@@ -845,6 +871,8 @@ plt.show()</div>
   </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

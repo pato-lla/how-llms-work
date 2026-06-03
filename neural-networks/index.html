@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<script>
+(function() {
+  try {
+    var theme = localStorage.getItem('how-llms-theme') || 'system';
+    var resolved = theme === 'dark' || theme === 'light'
+      ? theme
+      : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.theme = resolved;
+    document.documentElement.style.backgroundColor = resolved === 'dark' ? '#0B1220' : '#FFFFFF';
+    document.documentElement.style.colorScheme = resolved;
+  } catch (e) {}
+})();
+</script>
 <title>Neural Networks from Scratch — A Visual Deep Dive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,6 +70,17 @@
       <button class="tnav-btn" data-section="s-backprop">Backprop</button>
       <button class="tnav-btn" data-section="s-gd">Gradient Descent</button>
     </div>
+    <div class="top-nav-tools" aria-label="Language and theme controls">
+      <div class="toggle-group" role="group" aria-label="Language selector">
+        <button class="toggle-btn active" id="lang-en" type="button" data-locale="en" aria-pressed="true" aria-label="English">🇬🇧</button>
+        <button class="toggle-btn" id="lang-es" type="button" data-locale="es" aria-pressed="false" aria-label="Spanish">🇪🇸</button>
+      </div>
+      <div class="toggle-group" role="group" aria-label="Theme selector">
+        <button class="toggle-btn" id="theme-system" type="button" data-theme="system" aria-pressed="true" aria-label="System theme">◐</button>
+        <button class="toggle-btn" id="theme-light" type="button" data-theme="light" aria-pressed="false" aria-label="Light theme">☀</button>
+        <button class="toggle-btn" id="theme-dark" type="button" data-theme="dark" aria-pressed="false" aria-label="Dark theme">☾</button>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -75,7 +100,7 @@
           <div class="stat-item"><dt class="stat-lbl">Source</dt><dd class="stat-val">2h</dd></div>
         </dl>
         <p class="stats-caveat">Companion to <a href="../index.html" style="color:var(--accent)">Part 1: How LLMs Work</a>. All concepts and code traced directly to Karpathy's micrograd lecture.</p>
-        <div class="scroll-hint" aria-hidden="true"><div class="scroll-arrow"></div>Scroll to explore</div>
+        <a class="scroll-hint" href="#s-problem" aria-label="Scroll to explore"><div class="scroll-arrow"></div>Scroll to explore</a>
       </div>
       <div class="hero-right">
         <div class="typewriter-wrap" aria-label="Neural network insight">
@@ -401,7 +426,7 @@ loss.<span class="fn">backward</span>()
         </div>
         <div style="position:relative">
           <div id="bp-tooltip" class="bp-tooltip"></div>
-          <svg id="graph-svg" viewBox="0 0 420 200" width="100%" style="display:block" role="img" aria-label="Expression graph with backpropagation"></svg>
+          <svg id="graph-svg" viewBox="0 0 440 200" width="100%" style="display:block" role="img" aria-label="Expression graph with backpropagation"></svg>
         </div>
         <div class="bp-status" id="bp-status">Edit a and b, then click Forward Pass</div>
         <div style="margin-top:10px;display:flex;gap:10px">
@@ -539,6 +564,7 @@ n = <span class="fn">MLP</span>(<span class="nm">4</span>, [<span class="nm">3</
   </div>
 </section>
 
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
